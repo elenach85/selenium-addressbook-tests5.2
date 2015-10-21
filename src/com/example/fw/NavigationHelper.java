@@ -22,7 +22,6 @@ public class NavigationHelper extends WebDriverHelperBase {
 		}
 		   	}
 	public void goToSubmittedGroupPage() { 
-		System.out.println(driver.findElement(By.xpath("//*[@id='content']/div/i/a")).getText());
 		click(By.xpath("//*[@id='content']/div/i/a"));
 		
 	}
