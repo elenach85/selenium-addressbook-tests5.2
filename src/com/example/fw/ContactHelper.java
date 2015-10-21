@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import com.example.tests.ContactData;
 import com.example.tests.GroupData;
 import com.example.utils.SortedListOf;
+import com.thoughtworks.selenium.webdriven.commands.WaitForCondition;
 
 public class ContactHelper extends WebDriverHelperBase {
 	public static boolean CREATION=true;
@@ -19,14 +20,14 @@ public class ContactHelper extends WebDriverHelperBase {
 	}
 	private SortedListOf<ContactData>cachedContacts;
 	
-	public SortedListOf<ContactData> getContacts() {
+	public SortedListOf<ContactData> getContactsFromUI() {
 		if (cachedContacts==null) {
-			rebuildCache();
+			rebuildCacheFromUI();
 		}
 		return cachedContacts;
 		}
 		
-	private void rebuildCache() {
+	private void rebuildCacheFromUI() {
 	cachedContacts=new SortedListOf<ContactData>();
 		List<WebElement> rows = findElements();
 		for (WebElement row : rows) {
@@ -41,14 +42,24 @@ public class ContactHelper extends WebDriverHelperBase {
 
 		}
 		}
-
+	public SortedListOf<ContactData> getContactsFromDB() {
+		if (cachedContacts==null) {
+			rebuildCacheFromDB();
+		}
+		return cachedContacts;
+		}
+		
+	private void rebuildCacheFromDB() {
+	cachedContacts=new SortedListOf<ContactData>(manager.getHibernateHelper().listContacts());
+	
+		}
 	public void createContact(ContactData contact) {
 		initContactCreation();
-		randomGroupSelection(CREATION);
+		randomGroupSelectionCreationForm();
 		fillContactForm(contact,CREATION);
 		submitContactCreation();
 	    manager.navigateTo().mainPage();
-	    rebuildCache();
+	    rebuildCacheFromDB();
 		
 	}
 
@@ -58,13 +69,13 @@ public class ContactHelper extends WebDriverHelperBase {
 		fillContactForm(contact,MODIFICATION);
 	    submitContactModification();
 		manager.navigateTo().mainPage();
-		rebuildCache();
+		rebuildCacheFromDB();
 		return this;
 	}
 	public void modifyContactGroup(int index, ContactData contact) {
 		manager.navigateTo().mainPage();
+	    randomGroupSelectionModificationForm(index);
 		checkContact(index);
-	    randomGroupSelection(MODIFICATION);
 		submitGroupChange();
 		manager.navigateTo().goToSubmittedGroupPage();
 		manager.navigateTo().mainPage();
@@ -75,7 +86,7 @@ public class ContactHelper extends WebDriverHelperBase {
 		selectContact(index);
 		deleteContact();
 		manager.navigateTo().mainPage();
-		rebuildCache();
+		rebuildCacheFromDB();
 		
 	}
 	
@@ -134,6 +145,7 @@ public class ContactHelper extends WebDriverHelperBase {
 	}
 	public void checkContact(int index) {
 		if (manager.navigationHelper.onMainPage()==true) {
+driver.findElement(By.xpath("(//input[@type='checkbox'])[" + (index+1) + "]")).isSelected();
 	    click(By.xpath("(//input[@type='checkbox'])[" + (index+1) + "]"));
 		}
 		else manager.navigateTo().mainPage();
@@ -151,57 +163,34 @@ public class ContactHelper extends WebDriverHelperBase {
 	private List<WebElement> findElements() {
 		return driver.findElements(By.name("entry"));
 	}
-	public String randomGroupSelection(boolean formType){
-//SortedListOf<GroupData> groupNameList = manager.getGroupHelper().getGroups();
-List<GroupData> groupNameList = manager.getHibernateHelper().listGroups();
-		//List<WebElement> groupNamesList=getGroupsNameList();
+	
+	public String randomGroupSelectionModificationForm(int index){
+		List<GroupData> groupNameList = manager.getHibernateHelper().listGroups();
 		Random rnd=new Random();	
 		int index2=rnd.nextInt(groupNameList.size()-1);
-		//manager.navigateTo().onMainPage();
-		if (formType==MODIFICATION)
-	       {
+		click(By.xpath("(//select[@name='to_group']/option)[" + (index2+1) + "]"));	
 		selectGroupForChange(index2);
-	       }
-	else {
-	//	initContactCreation();
-	selectGroupForContactCreation(index2);		
-	}
 		String groupName;
 		groupName=groupNameList.get(index2).getName();
 		System.out.println(groupName);
 		 return groupName;
 	}
-	/*public List<WebElement> getGroupsNameList(){
-		if (manager.navigationHelper.onCreateContactPage()==true) {
-			List<WebElement>groupNames=driver.findElements(By.xpath("//select[@name='new_group']/option"));
-			return groupNames;
-		} else {if (manager.navigationHelper.onMainPage()==true) {
-			List<WebElement>groupNames=driver.findElements(By.xpath("//select[@name='to_group']/option"));
-			return groupNames;	
-		}
-		return groupNames;		
-		}
-		}		
-	public List<GroupData> getGroups() {
- 		SortedListOf<GroupData> groups= new SortedListOf<GroupData>();
- 		List<WebElement> checkboxes = driver.findElements(By.name("selected[]"));
- 		for (WebElement checkbox : checkboxes) {
-        GroupData group=new GroupData();
- 		String title=checkbox.getAttribute("title");
-			group.name=title.substring("Select (".length(),title.length()-")".length());
-			groups.add(group);				
-			String name=title.substring("Select (".length(),title.length()-")".length());
-		groups.add(new GroupData().withName(name));	
- 		}
- 		return groups;
- 	}
- 	*/
+
+	public String randomGroupSelectionCreationForm(){
+		List<GroupData> groupNameList = manager.getHibernateHelper().listGroups();
+				Random rnd=new Random();	
+				int index2=rnd.nextInt(groupNameList.size()-1);
+			selectGroupForContactCreation(index2);		
+				String groupName;
+				groupName=groupNameList.get(index2).getName();
+				System.out.println(groupName);
+				 return groupName;
+			}
+			
 	public void selectGroupForContactCreation(int index2) {
-		
-	     click(By.xpath("(//select[@name='new_group']/option)[" + (index2+1) + "]"));
+	   click(By.xpath("(//select[@name='new_group']/option)[" + (index2+1) + "]"));
 	  			  
-		}
-	
+	}
 	public void selectGroupForChange(int index2) {
 	      click(By.xpath("(//select[@name='to_group']/option)[" + (index2+1) + "]"));		  
 		}

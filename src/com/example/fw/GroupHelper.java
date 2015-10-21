@@ -59,25 +59,27 @@ public class GroupHelper extends WebDriverHelperBase  {
 		  	fillGroupForm(group);
 		    submitGroupCreation();
 		    returnGroupsPage();
-		    rebuildCacheFromUI();
+		    rebuildCacheFromDB();
 		   
 		
 	}
 	
 	public void deleteGroup(int index) {
+		manager.navigateTo().groupsPage();
 		selectGroupByIndex(index);
 		submitGroupRemoval();
 		returnGroupsPage();
-		rebuildCacheFromUI();
+		rebuildCacheFromDB();
 		}
 	
 	
 	public void modifyGroup(int index, GroupData group){
+		manager.navigateTo().groupsPage();
 	    initGroupModification(index);
 	    fillGroupForm(group);
 		submitGroupModification();
 		 returnGroupsPage();
-		rebuildCacheFromUI();	
+		rebuildCacheFromDB();	
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------		

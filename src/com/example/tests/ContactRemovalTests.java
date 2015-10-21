@@ -17,14 +17,14 @@ public class ContactRemovalTests extends TestBase{
 	@Test
 	public void deleteSomeContact() {
 		//save old list
-		SortedListOf<ContactData>oldContactList=new SortedListOf <ContactData> (app.getHibernateHelper().listContacts());
+		SortedListOf<ContactData>oldContactList=app.getContactHelper().getContactsFromDB();
 		 Random rnd=new Random();
 		 int index=rnd.nextInt(oldContactList.size()-1);
 		
 		//actions
 		 app.getContactHelper().deleteContact(index);
 		 //save new list
-		 SortedListOf<ContactData>newContactList=app.getContactHelper().getContacts();
+		 SortedListOf<ContactData>newContactList=app.getContactHelper().getContactsFromDB();
 		  //compare
 			assertThat(newContactList, equalTo(oldContactList.without(index)));
 		 

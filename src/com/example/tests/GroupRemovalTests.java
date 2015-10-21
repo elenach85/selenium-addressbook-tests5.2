@@ -16,14 +16,14 @@ public class GroupRemovalTests extends TestBase {
 	 @Test
 public void deleteSomeGroup() {
 		 //save old state
-		 SortedListOf<GroupData> oldList=app.getGroupHelper().getGroups();
+		 SortedListOf<GroupData> oldList=app.getGroupHelper().getGroupsFromDB();
 		 Random rnd=new Random();
 		 int index=rnd.nextInt(oldList.size()-1);
 		 //actions
 				 app.getGroupHelper().deleteGroup(index);
 		 		
 		 //save new state
-		SortedListOf<GroupData> newList=app.getGroupHelper().getGroups();
+		SortedListOf<GroupData> newList=app.getGroupHelper().getGroupsFromDB();
 		 //compare states
 		 //oldList.remove(index);
 		// Collections.sort(oldList);

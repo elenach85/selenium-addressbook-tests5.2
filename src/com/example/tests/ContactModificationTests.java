@@ -23,7 +23,7 @@ public class ContactModificationTests extends TestBase{
 		//save old list
 	app.navigateTo().mainPage();
 	
-	        SortedListOf<ContactData>oldContactList=app.getContactHelper().getContacts();
+	        SortedListOf<ContactData>oldContactList=app.getContactHelper().getContactsFromDB();
 			 Random rnd=new Random();
 			int index=rnd.nextInt(oldContactList.size()-1);
 			//actions
@@ -31,7 +31,7 @@ public class ContactModificationTests extends TestBase{
 			app.getContactHelper().modifyContact(index,contact)
 		.modifyContactGroup(index, contact);
 		 //save new list
-			SortedListOf<ContactData>newContactList=app.getContactHelper().getContacts();
+			SortedListOf<ContactData>newContactList=app.getContactHelper().getContactsFromDB();
 			//compare
 			assertThat(newContactList, equalTo(oldContactList.without(index).withAdded(contact)));
 			
