@@ -34,12 +34,18 @@ public void testContactCreationWithValidData(ContactData contact) throws Excepti
 		app.navigateTo().mainPage();	
 		// save old list
 		SortedListOf<ContactData>oldContactList=app.getContactHelper().getContactsFromDB();
+		SortedListOf<ContactData>oldContactListFromUI=app.getContactHelper().getContactsFromUI();
+		assertEquals(oldContactList.size(),oldContactListFromUI.size());
+		assertEquals(String.valueOf(oldContactList.size()), app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+		assertEquals(oldContactList,oldContactListFromUI);
 		//actions
 	app.getContactHelper().createContact(contact);
 		//save new list
 	  SortedListOf<ContactData>newContactList=app.getContactHelper().getContactsFromDB();
+	  SortedListOf<ContactData>newContactListFromUI=app.getContactHelper().getContactsFromUI();
 		assertThat(newContactList, equalTo(oldContactList.withAdded(contact)));
-
+		assertEquals(String.valueOf(newContactList.size()),app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+		assertEquals(newContactList,newContactListFromUI);
 }
 
 	

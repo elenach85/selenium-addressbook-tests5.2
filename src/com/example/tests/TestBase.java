@@ -20,6 +20,7 @@ import com.example.fw.ApplicationManager;
 import static com.example.tests.GroupDataGenerator.generateRandomGroups;
 import static com.example.tests.GroupDataGenerator.loadGroupsFromCsvFile;
 import static com.example.tests.GroupDataGenerator.loadGroupsFromXmlFile;
+import static org.testng.Assert.assertEquals;
 import static com.example.tests.ContactDataGenerator.generateRandomContacts;
 import static com.example.tests.ContactDataGenerator.loadContactsFromCsvFile;
 import static com.example.tests.ContactDataGenerator.loadContactsFromXmlFile;
@@ -177,6 +178,39 @@ app.getGroupHelper().getGroupsFromUI();
 	contactList.add(new Object[]{contact});
 	}
 	return contactList.iterator();
+	}
+
+	public String getValueFromField(By locator) {
+		String text=app.getDriver().findElement(locator).getAttribute("value");
+		return text;
+	}
+
+	public String getTextFromField(By locator) {
+		String text=app.getDriver().findElement(locator).getText();
+		return text;
+	}
+
+	public void compareContactData(String firstNameFromEditForm, String lastNameFromEditForm, String addressFromEditForm, String hometelFromEditForm, String mobiletelFromEditForm, String worktelFromEditForm,
+			String emailFromEditForm, String email2FromEditForm, String bdayFromEditForm, String bmonthFromEditForm, String byearFromEditForm, String address2FromEditForm, String phone2FromEditForm, String firstNameFromDB,
+			String lastNameFromDB, String addressFromDB, String hometelFromDB, String worktelFromDB, String mobiletelFromDB, String emailFromDB, String email2FromDB, String bdayFromDB,
+			String bmonthFromDB, String byearFromDB, String address2FromDB, String phone2FromDB) {
+				compareDataByValue(firstNameFromEditForm, firstNameFromDB);
+				compareDataByValue(lastNameFromEditForm, lastNameFromDB);
+				compareDataByValue(addressFromEditForm, addressFromDB);
+				compareDataByValue(hometelFromEditForm, hometelFromDB);
+				compareDataByValue(mobiletelFromEditForm, mobiletelFromDB);
+				compareDataByValue(worktelFromEditForm, worktelFromDB);
+				compareDataByValue(emailFromEditForm, emailFromDB);
+				compareDataByValue(email2FromEditForm, email2FromDB);
+				compareDataByValue(bdayFromEditForm, bdayFromDB);
+				compareDataByValue(bmonthFromEditForm, bmonthFromDB);
+				compareDataByValue(byearFromEditForm, byearFromDB);
+				compareDataByValue(address2FromEditForm, address2FromDB);
+				compareDataByValue(phone2FromEditForm, phone2FromDB);
+			}
+
+	public void compareDataByValue(String firstNameFromEditForm, String firstNameFromDB) {
+		assertEquals(firstNameFromEditForm, firstNameFromDB);
 	}
 
 }

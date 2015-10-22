@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
 
 import com.example.fw.ApplicationManager;
 import com.example.fw.JdbcHelper;
@@ -16,6 +17,7 @@ public class Sample2 {
 	ApplicationManager app=new ApplicationManager(properties);
 	//JdbcHelper jdbc=new JdbcHelper(app,"jdbc:mysql://localhost/addressbook?user=root&password=" );
 	//System.out.println(app.getHibernateHelper().listGroups()); 
-	System.out.print(app.getHibernateHelper().listContacts()); 
+
+		
 }
 }
