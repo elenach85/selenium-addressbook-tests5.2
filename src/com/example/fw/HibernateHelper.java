@@ -35,5 +35,17 @@ public class HibernateHelper extends HelperBase {
 		} finally {
           trans.commit();
 		}
+		
+	}
+	
+	public ContactData getContact(String id){
+		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Transaction trans = session.beginTransaction();
+		try {
+			return (ContactData) session.createQuery("from ContactData where id='"+id + "'").uniqueResult();
+		} finally {
+			trans.commit();
+		}
+		
 	}
 }

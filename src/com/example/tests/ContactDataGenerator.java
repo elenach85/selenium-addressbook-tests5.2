@@ -83,7 +83,7 @@ return;
 				.withBirthDay(part[8])
 				.withBirthMonth(part[9])
 				.withBirthYear(part[10])
-				.withEmail2(part[11])
+				.withAddress2(part[11])
 				.withPhone2(part[12]);		
 		list.add(contact);
 		line= bufferedReader.readLine();
@@ -105,8 +105,9 @@ return;
 					.withBirthDay(generateRandomDay())
 					.withBirthYear(generateRandomYear())
 					.withBirthMonth(generateRandomMonth())
+					.withAddress2(generateRandomString())
 					.withEmail2(generateRandomString())
-					.withPhone2(generateRandomDay());
+					.withPhone2(generateRandomString());
 			list.add(contact);
 			}
 			return list;

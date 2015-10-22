@@ -16,8 +16,8 @@ public class Sample2 {
 	properties.load(new FileReader(new File("application.properties")));
 	ApplicationManager app=new ApplicationManager(properties);
 	//JdbcHelper jdbc=new JdbcHelper(app,"jdbc:mysql://localhost/addressbook?user=root&password=" );
-	//System.out.println(app.getHibernateHelper().listGroups()); 
-
+  System.out.println(app.getHibernateHelper().listContacts()); 
+  System.out.println(app.getHibernateHelper().getContact("550"));
 		
 }
 }

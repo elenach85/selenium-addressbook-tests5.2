@@ -25,9 +25,9 @@ public class ContactRemovalTests extends TestBase{
 		assertEquals(oldContactList,oldContactListFromUI);
 		 Random rnd=new Random();
 		 int index=rnd.nextInt(oldContactList.size()-1);
-		
+		 String idFromDB=oldContactList.get(index).getId();
 		//actions
-		 app.getContactHelper().deleteContact(index);
+		 app.getContactHelper().deleteContact(idFromDB);
 		 //save new list
 		 SortedListOf<ContactData>newContactList=app.getContactHelper().getContactsFromDB();
 		 SortedListOf<ContactData>newContactListFromUI=app.getContactHelper().getContactsFromUI();

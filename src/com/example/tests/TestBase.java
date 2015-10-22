@@ -147,7 +147,7 @@ return day;
 
 	public  String generateRandomString(){
 		Random rnd=new Random(); 
-		if (rnd.nextInt(3)==0) {
+		if (rnd.nextInt(7)==0) {
 			return " ";	
 			} else {
 			return "test"+ rnd.nextInt();
@@ -173,7 +173,8 @@ app.getGroupHelper().getGroupsFromUI();
 					.withBirthYear(generateRandomYear())
 					.withBirthMonth(generateRandomMonth())
 					.withEmail2(generateRandomString())
-					.withPhone2(generateRandomDay());
+					.withAddress2(generateRandomString())
+					.withPhone2(generateRandomString());
 		//.withGroupName(app.getContactHelper().randomGroupSelection());
 	contactList.add(new Object[]{contact});
 	}
@@ -188,29 +189,6 @@ app.getGroupHelper().getGroupsFromUI();
 	public String getTextFromField(By locator) {
 		String text=app.getDriver().findElement(locator).getText();
 		return text;
-	}
-
-	public void compareContactData(String firstNameFromEditForm, String lastNameFromEditForm, String addressFromEditForm, String hometelFromEditForm, String mobiletelFromEditForm, String worktelFromEditForm,
-			String emailFromEditForm, String email2FromEditForm, String bdayFromEditForm, String bmonthFromEditForm, String byearFromEditForm, String address2FromEditForm, String phone2FromEditForm, String firstNameFromDB,
-			String lastNameFromDB, String addressFromDB, String hometelFromDB, String worktelFromDB, String mobiletelFromDB, String emailFromDB, String email2FromDB, String bdayFromDB,
-			String bmonthFromDB, String byearFromDB, String address2FromDB, String phone2FromDB) {
-				compareDataByValue(firstNameFromEditForm, firstNameFromDB);
-				compareDataByValue(lastNameFromEditForm, lastNameFromDB);
-				compareDataByValue(addressFromEditForm, addressFromDB);
-				compareDataByValue(hometelFromEditForm, hometelFromDB);
-				compareDataByValue(mobiletelFromEditForm, mobiletelFromDB);
-				compareDataByValue(worktelFromEditForm, worktelFromDB);
-				compareDataByValue(emailFromEditForm, emailFromDB);
-				compareDataByValue(email2FromEditForm, email2FromDB);
-				compareDataByValue(bdayFromEditForm, bdayFromDB);
-				compareDataByValue(bmonthFromEditForm, bmonthFromDB);
-				compareDataByValue(byearFromEditForm, byearFromDB);
-				compareDataByValue(address2FromEditForm, address2FromDB);
-				compareDataByValue(phone2FromEditForm, phone2FromDB);
-			}
-
-	public void compareDataByValue(String firstNameFromEditForm, String firstNameFromDB) {
-		assertEquals(firstNameFromEditForm, firstNameFromDB);
 	}
 
 }

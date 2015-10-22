@@ -65,9 +65,9 @@ public class ContactHelper extends WebDriverHelperBase {
 
 	}
 
-	public ContactHelper modifyContact(int index, ContactData contact) {
+	public ContactHelper modifyContact(String idFromDB, ContactData contact) {
 		manager.navigateTo().mainPage();
-		selectContact(index);
+		selectContact(idFromDB);
 		fillContactForm(contact, MODIFICATION);
 		submitContactModification();
 		manager.navigateTo().mainPage();
@@ -75,18 +75,18 @@ public class ContactHelper extends WebDriverHelperBase {
 		return this;
 	}
 
-	public void modifyContactGroup(int index, ContactData contact) {
+	public void modifyContactGroup(String idFromDB) {
 		manager.navigateTo().mainPage();
 		randomGroupSelection(MODIFICATION);
-		checkContact(index);
+		checkContact(idFromDB);
 		submitGroupChange();
 		manager.navigateTo().goToSubmittedGroupPage();
 		resetGroupsListToAllValue();
 
 	}
 
-	public void deleteContact(int index) {
-		selectContact(index);
+	public void deleteContact(String idFromDB) {
+		selectContact(idFromDB);
 		deleteContact();
 		manager.navigateTo().mainPage();
 		rebuildCacheFromDB();
@@ -128,9 +128,17 @@ public class ContactHelper extends WebDriverHelperBase {
 
 	}
 
-	public void selectContact(int index) {
-		click(By.xpath("//tr[@name='entry'][" + (index + 1) + "]/td/a/img[@title='Edit']"));
-
+	public void selectContact(String idFromDB) {
+		click(By.xpath("//a[@href='edit.php?id=" + idFromDB + "']"));
+	}
+	public void checkContact(String idFromDB) {
+		if (manager.navigationHelper.onMainPage() == true) {
+			click(By.xpath("//td/input[@value='" + idFromDB + "']"));
+		} else {
+			manager.navigateTo().mainPage();
+			click(By.xpath("//td/input[@value='" + idFromDB + "']"));
+					
+		}
 	}
 
 	public void deleteContact() {
@@ -138,15 +146,7 @@ public class ContactHelper extends WebDriverHelperBase {
 
 	}
 
-	public void checkContact(int index) {
-		if (manager.navigationHelper.onMainPage() == true) {
-			click(By.xpath("(//input[@type='checkbox'])[" + (index + 1) + "]"));
-		} else {
-			manager.navigateTo().mainPage();
-			click(By.xpath("(//input[@type='checkbox'])[" + (index + 1) + "]"));
-		}
-	}
-
+	
 	public void submitContactModification() {
 		click(By.xpath("//input[@value='Update']"));
 	}

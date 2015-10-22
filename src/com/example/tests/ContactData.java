@@ -47,8 +47,11 @@ public class ContactData implements Comparable<ContactData> {
 	
 	@Override
 	public String toString() {
-		return "ContactData [first_name=" + first_name + ", last_name=" + last_name + ", home_tel=" + home_tel
-				+ ", email=" + email + ", id=" + contact_id + "]";
+		return "ContactData [first_name=" + first_name + ", last_name=" + last_name + ", address_1=" + address_1
+				+ ", home_tel=" + home_tel + ", mobile_tel=" + mobile_tel + ", work_tel=" + work_tel + ", email="
+				+ email + ", email2=" + email2 + ", birth_day=" + birth_day + ", birth_month=" + birth_month
+				+ ", birth_year=" + birth_year + ", group_name=" + group_name + ", address_2=" + address_2
+				+ ", phone_2=" + phone_2 + ", contact_id=" + contact_id + ", mobile_phone=" + mobile_phone + "]";
 	}
 	@Override
 	public int hashCode() {
@@ -131,7 +134,11 @@ public class ContactData implements Comparable<ContactData> {
 		return this;
 	}	
 	public ContactData withAddress1(String address_1) {
-		address_1 = address_1;
+		this.address_1 = address_1;
+		return this;
+	}
+	public ContactData withAddress2(String address_2) {
+		this.address_2 = address_2;
 		return this;
 	}
 	public ContactData withPhone2(String phone_2) {
