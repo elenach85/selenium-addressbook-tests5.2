@@ -2,9 +2,13 @@ package com.example.fw;
 
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import com.example.tests.ContactData;
+import com.example.tests.ContactDataForPrintPhones;
 import com.example.tests.GroupData;
 import com.example.utils.SortedListOf;
 import com.thoughtworks.selenium.webdriven.commands.WaitForCondition;
@@ -42,7 +46,35 @@ public class ContactHelper extends WebDriverHelperBase {
 
 		}
 	}
+	public SortedListOf<ContactDataForPrintPhones> getContactsFromUIForPrintPhones() {
+		SortedListOf<ContactDataForPrintPhones>contactsForPrPhones=new SortedListOf<ContactDataForPrintPhones>();
+		List<WebElement> elements=manager.getDriver().findElements(By.xpath("//table[@id='view']/tbody/tr/td[@valign='top']"));
+		for (WebElement element : elements) {
+			String name=element.findElement(By.tagName("b")).getText();	
+			String text=element.getText();
+			String extractHome=getHomeTel(text);
+			String home_tel=extractHome.substring("H: ".length(), extractHome.length());
+			contactsForPrPhones.add(new ContactDataForPrintPhones().withUnitedName(name).withHome_Tel(home_tel));
+		}
+		return contactsForPrPhones;	
+		
+	}
+	public SortedListOf<ContactDataForPrintPhones> getContactsFromUIForPrPhonesFromMainPage() {
+		SortedListOf<ContactDataForPrintPhones>contactsFromMainPage = new SortedListOf<ContactDataForPrintPhones>();
+		List<WebElement> rows = findElements();
+		for (WebElement row : rows) {
+			List<WebElement> columns = row.findElements(By.tagName("td"));
+			ContactData contact = new ContactData();
+			String last_name_title = columns.get(1).getText();
+			String first_name_title = columns.get(2).getText();
+			String home_tel = columns.get(4).getText();
+			String unitedName=first_name_title.concat(" "+ last_name_title);
+			contactsFromMainPage.add(new ContactDataForPrintPhones().withUnitedName(unitedName).withHome_Tel(home_tel));
 
+		}
+		return contactsFromMainPage;
+	
+	}
 	public SortedListOf<ContactData> getContactsFromDB() {
 		if (cachedContacts == null) {
 			rebuildCacheFromDB();
@@ -50,6 +82,7 @@ public class ContactHelper extends WebDriverHelperBase {
 		return cachedContacts;
 	}
 
+	
 	private void rebuildCacheFromDB() {
 		cachedContacts = new SortedListOf<ContactData>(manager.getHibernateHelper().listContacts());
 
@@ -192,5 +225,14 @@ public class ContactHelper extends WebDriverHelperBase {
 		click(By.xpath("//select[@onchange='this.parentNode.submit()']/option[@value=''] "));
 
 	}
-
+	public String getHomeTel(String text) {
+		Pattern regex = Pattern.compile("H:\\s*\\w*");
+		Matcher matcher = regex.matcher(text);
+		if (matcher.find()) {
+			return matcher.group();
+		} else {
+			return "";
+		
+		}
+}
 }

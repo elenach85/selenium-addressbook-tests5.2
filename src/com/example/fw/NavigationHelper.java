@@ -21,6 +21,9 @@ public class NavigationHelper extends WebDriverHelperBase {
 			click(By.linkText("groups"));
 		}
 		   	}
+	public void printPhonesPage(){
+		click(By.linkText("print phones"));
+	}
 	public void goToSubmittedGroupPage() { 
 		click(By.xpath("//*[@id='content']/div/i/a"));
 		
@@ -42,6 +45,7 @@ public class NavigationHelper extends WebDriverHelperBase {
 		}
 	
 	}
+	
 	public boolean onCreateContactPage() {
 		if (driver.findElements(By.xpath("//input[@value='Enter']")).size()>0){
 		

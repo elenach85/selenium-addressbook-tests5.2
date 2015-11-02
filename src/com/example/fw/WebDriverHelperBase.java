@@ -34,7 +34,10 @@ public boolean isAlertPresent() {
       return false;
     }
   }
-
+protected void openAbsoluteUrl(String string) {
+driver.get(string);
+	
+}
 public String closeAlertAndGetItsText() {
     try {
       Alert alert = driver.switchTo().alert();

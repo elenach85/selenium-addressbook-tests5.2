@@ -19,6 +19,7 @@ public class ContactData implements Comparable<ContactData> {
 	private String contact_id;
 	private String mobile_phone;
 
+
 	public ContactData(String first_name, String last_name, String address_1, String home_tel, String mobile_tel,
 			String work_tel, String email,String email2, String birth_day, String birth_month, String birth_year, String group_name,
 			String address_2, String phone_2,String id) {
@@ -37,6 +38,7 @@ public class ContactData implements Comparable<ContactData> {
 		this.address_2 = address_2;
 		this.phone_2 = phone_2;
 		this.contact_id=id;
+		
 	}
 	public ContactData(){
 		
