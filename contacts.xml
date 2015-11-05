@@ -1,0 +1,32 @@
+<list>
+  <contact>
+    <first__name>test-1035310398</first__name>
+    <last__name> </last__name>
+    <address__1>test-1837140886</address__1>
+    <home__tel>test261398064</home__tel>
+    <work__tel> </work__tel>
+    <email>test1229536896</email>
+    <email2>test1007378070</email2>
+    <birth__day>12</birth__day>
+    <birth__month>January</birth__month>
+    <birth__year> </birth__year>
+    <address__2> </address__2>
+    <phone__2>test1719815747</phone__2>
+    <mobile__phone>test-499473259</mobile__phone>
+  </contact>
+  <contact>
+    <first__name>test-2004385703</first__name>
+    <last__name>test958997641</last__name>
+    <address__1> </address__1>
+    <home__tel>test-2132144562</home__tel>
+    <work__tel>test-696333606</work__tel>
+    <email>test538675203</email>
+    <email2>test-2144902144</email2>
+    <birth__day>13</birth__day>
+    <birth__month>June</birth__month>
+    <birth__year>1998</birth__year>
+    <address__2> </address__2>
+    <phone__2> </phone__2>
+    <mobile__phone>test-1369640856</mobile__phone>
+  </contact>
+</list>

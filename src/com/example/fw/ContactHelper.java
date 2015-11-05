@@ -53,7 +53,12 @@ public class ContactHelper extends WebDriverHelperBase {
 			String name=element.findElement(By.tagName("b")).getText();	
 			String text=element.getText();
 			String extractHome=getHomeTel(text);
-			String home_tel=extractHome.substring("H: ".length(), extractHome.length());
+			String home_tel;
+			if (extractHome.equals("")) {
+				home_tel="";
+			} else {
+				home_tel=extractHome.substring("H: ".length(), (extractHome.length()-"\n".length()));
+			}
 			contactsForPrPhones.add(new ContactDataForPrintPhones().withUnitedName(name).withHome_Tel(home_tel));
 		}
 		return contactsForPrPhones;	
@@ -63,12 +68,17 @@ public class ContactHelper extends WebDriverHelperBase {
 		SortedListOf<ContactDataForPrintPhones>contactsFromMainPage = new SortedListOf<ContactDataForPrintPhones>();
 		List<WebElement> rows = findElements();
 		for (WebElement row : rows) {
+			String unitedName;	
 			List<WebElement> columns = row.findElements(By.tagName("td"));
-			ContactData contact = new ContactData();
 			String last_name_title = columns.get(1).getText();
 			String first_name_title = columns.get(2).getText();
 			String home_tel = columns.get(4).getText();
-			String unitedName=first_name_title.concat(" "+ last_name_title);
+			if (first_name_title.equals("")) {
+				unitedName=last_name_title;
+			} else {
+				unitedName=first_name_title.concat(" "+ last_name_title);
+			}
+			
 			contactsFromMainPage.add(new ContactDataForPrintPhones().withUnitedName(unitedName).withHome_Tel(home_tel));
 
 		}
@@ -123,7 +133,7 @@ public class ContactHelper extends WebDriverHelperBase {
 		deleteContact();
 		manager.navigateTo().mainPage();
 		rebuildCacheFromDB();
-
+		
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------------
@@ -226,7 +236,7 @@ public class ContactHelper extends WebDriverHelperBase {
 
 	}
 	public String getHomeTel(String text) {
-		Pattern regex = Pattern.compile("H:\\s*\\w*");
+		Pattern regex = Pattern.compile("H:\\s*\\w*[\\w*\\-*]+w*\\\n");
 		Matcher matcher = regex.matcher(text);
 		if (matcher.find()) {
 			return matcher.group();

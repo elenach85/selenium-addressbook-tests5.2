@@ -25,7 +25,7 @@ public class ApplicationManager {
 	public HibernateHelper hibernateHelper;
 	public  ApplicationManager(Properties properties){
 		this.properties = properties;
-		/*String browser=properties.getProperty("browser");
+		String browser=properties.getProperty("browser");
 		if ("firefox".equals(browser)) {
 			driver = new FirefoxDriver();	
 		} else 
@@ -38,12 +38,12 @@ public class ApplicationManager {
 		}
 		baseUrl=properties.getProperty("baseUrl");
 	  //  driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	    driver.get(baseUrl);*/
+	    driver.get(baseUrl);
 	}
 	
 		public void stop() {
 		driver.quit();
-	   		
+	   	
 	}
 public NavigationHelper navigateTo(){
 	if (navigationHelper==null) {
