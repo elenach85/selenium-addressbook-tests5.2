@@ -16,19 +16,23 @@ public class GroupRemovalTests extends TestBase {
 	 @Test
 public void deleteSomeGroup() {
 		 //save old state
-		 SortedListOf<GroupData> oldList=app.getGroupHelper().getGroupsFromDB();
+		 SortedListOf<GroupData> oldList=app.getModel().getGroups();
 		 Random rnd=new Random();
 		 int index=rnd.nextInt(oldList.size()-1);
 		 //actions
 				 app.getGroupHelper().deleteGroup(index);
 		 		
 		 //save new state
-		SortedListOf<GroupData> newList=app.getGroupHelper().getGroupsFromDB();
-		 //compare states
-		 //oldList.remove(index);
-		// Collections.sort(oldList);
-		 //assertEquals(newList, oldList);
+		SortedListOf<GroupData> newList=app.getModel().getGroups();
 		 assertThat(newList,equalTo(oldList.without(index)));
+		 if (wantToCheck()) {
+				if ("yes".equals(app.getProperty("check.db"))) {
+					assertThat(app.getModel().getGroups(),equalTo(app.getHibernateHelper().listGroups()));	
+				}
+				if ("yes".equals(app.getProperty("check.ui"))) {
+				assertThat(app.getModel().getGroups(),equalTo(app.getGroupHelper().getGroupsFromUI()));
+				  }	
+			}
 	 }
 	 }
 

@@ -23,28 +23,24 @@ public class ApplicationManager {
 	public ContactHelper contactHelper;
 	private Properties properties;
 	public HibernateHelper hibernateHelper;
+	private ApplicationModel model;
 	public  ApplicationManager(Properties properties){
 		this.properties = properties;
-		String browser=properties.getProperty("browser");
-		if ("firefox".equals(browser)) {
-			driver = new FirefoxDriver();	
-		} else 
-		if ("ie".equals(browser)) {
-			//System.setProperty("webdriver.ie.driver", "C:\IEDriver\\IEDriverServer.exe");
-			driver = new InternetExplorerDriver();	
-		}
-		else {
-			throw new Error("Unsupported browser:"+ browser);
-		}
-		baseUrl=properties.getProperty("baseUrl");
-	  //  driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	    driver.get(baseUrl);
+		model= new ApplicationModel();
+		model.setGroups(getHibernateHelper().listGroups());
+		model.setContacts(getHibernateHelper().listContacts());
 	}
-	
 		public void stop() {
 		driver.quit();
 	   	
 	}
+public ApplicationModel getModel(){
+return model;	
+}
+public String getProperty(String key){
+	return properties.getProperty(key);
+	
+}
 public NavigationHelper navigateTo(){
 	if (navigationHelper==null) {
 	navigationHelper=new NavigationHelper(this);	
@@ -81,8 +77,8 @@ public WebDriver getDriver() {
 		else {
 			throw new Error("Unsupported browser:"+ browser);
 		}
+		
 		baseUrl=properties.getProperty("baseUrl");
-	  //  driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	    driver.get(baseUrl);
 		}
 	return driver;

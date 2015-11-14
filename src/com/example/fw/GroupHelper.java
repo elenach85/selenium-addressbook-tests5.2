@@ -14,43 +14,30 @@ import com.example.utils.SortedListOf;
 
 import net.sourceforge.htmlunit.corejs.javascript.regexp.SubString;
 
-public class GroupHelper extends WebDriverHelperBase  {
-	 
-	
+public class GroupHelper extends WebDriverHelperBase  {	
+
 	public GroupHelper(ApplicationManager manager) {
 		super(manager);
 		}
 	
-	private SortedListOf<GroupData>cachedGroups;
 	
 	public SortedListOf<GroupData> getGroupsFromUI() {
-		if (cachedGroups==null){
-		rebuildCacheFromUI();
-		}
-		return cachedGroups;
-		}
-	
-		private void rebuildCacheFromUI() {
-			cachedGroups= new SortedListOf<GroupData>();
-			   manager.navigateTo().groupsPage();
+		SortedListOf<GroupData>groups=new SortedListOf<GroupData>();
+		manager.navigateTo().groupsPage();
 			List<WebElement> checkboxes = driver.findElements(By.name("selected[]"));
 			for (WebElement checkbox : checkboxes) {
 			String title=checkbox.getAttribute("title");
-				String name=title.substring("Select (".length(),title.length()-")".length());
-				cachedGroups.add(new GroupData().withName(name));	
-		
+			String name=title.substring("Select (".length(),title.length()-")".length());
+			String id=checkbox.getAttribute("value");
+			groups.add(new GroupData().withName(name).withId(id));	
+		   
 	}
+			return groups;
 		}
 		
 		public SortedListOf<GroupData> getGroupsFromDB() {
-			if (cachedGroups==null){
-			rebuildCacheFromDB();
-			}
-			return cachedGroups;
-			}
-		
-			private void rebuildCacheFromDB() {
-				cachedGroups= new SortedListOf<GroupData>(manager.getHibernateHelper().listGroups());
+			 SortedListOf<GroupData>groups=new SortedListOf<GroupData>(manager.getHibernateHelper().listGroups());
+			return groups;
 			
 			}
 	public void createGroup(GroupData group) {
@@ -59,7 +46,8 @@ public class GroupHelper extends WebDriverHelperBase  {
 		  	fillGroupForm(group);
 		    submitGroupCreation();
 		    returnGroupsPage();
-		    rebuildCacheFromDB();
+		    //update model
+		    manager.getModel().addGroup(group);
 		   
 		
 	}
@@ -69,17 +57,19 @@ public class GroupHelper extends WebDriverHelperBase  {
 		selectGroupByIndex(index);
 		submitGroupRemoval();
 		returnGroupsPage();
-		rebuildCacheFromDB();
+		//update model
+		manager.getModel().removeGroup(index);
 		}
 	
 	
-	public void modifyGroup(int index, GroupData group){
+	public void modifyGroup(String groupId, GroupData group,int index){
 		manager.navigateTo().groupsPage();
-	    initGroupModification(index);
+	    initGroupModification(groupId);
 	    fillGroupForm(group);
 		submitGroupModification();
 		 returnGroupsPage();
-		rebuildCacheFromDB();	
+		 // update model
+		manager.getModel().removeGroup(index).addGroup(group);
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------		
@@ -105,8 +95,14 @@ public class GroupHelper extends WebDriverHelperBase  {
 		click(By.xpath("//input[@name='selected[]']["+ (index+1)+"]"));
  
 	}
-	public void initGroupModification(int index) {
-	selectGroupByIndex(index);
+	
+	private void selectGroupById(String groupId) {
+		click(By.xpath("//input[@value='" + groupId + "']"));
+ 
+	}
+	public void initGroupModification(String groupId) {
+	manager.navigateTo().groupsPage();
+	selectGroupById(groupId);
 	click(By.name("edit")); 
 	}
 	public void submitGroupModification() {

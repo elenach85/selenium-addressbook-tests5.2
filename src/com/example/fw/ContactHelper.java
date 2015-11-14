@@ -21,17 +21,11 @@ public class ContactHelper extends WebDriverHelperBase {
 		super(manager);
 	}
 
-	private SortedListOf<ContactData> cachedContacts;
+	private SortedListOf<ContactData> contacts;
 
 	public SortedListOf<ContactData> getContactsFromUI() {
-		if (cachedContacts == null) {
-			rebuildCacheFromUI();
-		}
-		return cachedContacts;
-	}
-
-	private void rebuildCacheFromUI() {
-		cachedContacts = new SortedListOf<ContactData>();
+		manager.navigateTo().mainPage();
+		contacts=new SortedListOf<ContactData>();
 		List<WebElement> rows = findElements();
 		for (WebElement row : rows) {
 			List<WebElement> columns = row.findElements(By.tagName("td"));
@@ -41,11 +35,14 @@ public class ContactHelper extends WebDriverHelperBase {
 			String email = columns.get(3).getText();
 			String home_tel = columns.get(4).getText();
 			String id = columns.get(0).findElement(By.xpath(".//input[@value]")).getAttribute("value");
-			cachedContacts.add(new ContactData().withFirstname(first_name_title).withLastname(last_name_title)
+			contacts.add(new ContactData().withFirstname(first_name_title).withLastname(last_name_title)
 					.withEmail(email).withHomeTel(home_tel).withId(id));
 
 		}
+		return contacts;
 	}
+
+
 	public SortedListOf<ContactDataForPrintPhones> getContactsFromUIForPrintPhones() {
 		SortedListOf<ContactDataForPrintPhones>contactsForPrPhones=new SortedListOf<ContactDataForPrintPhones>();
 		List<WebElement> elements=manager.getDriver().findElements(By.xpath("//table[@id='view']/tbody/tr/td[@valign='top']"));
@@ -86,17 +83,9 @@ public class ContactHelper extends WebDriverHelperBase {
 	
 	}
 	public SortedListOf<ContactData> getContactsFromDB() {
-		if (cachedContacts == null) {
-			rebuildCacheFromDB();
-		}
-		return cachedContacts;
+	return contacts= new SortedListOf<ContactData>(manager.getHibernateHelper().listContacts());	
 	}
 
-	
-	private void rebuildCacheFromDB() {
-		cachedContacts = new SortedListOf<ContactData>(manager.getHibernateHelper().listContacts());
-
-	}
 
 	public void createContact(ContactData contact) {
 		initContactCreation();
@@ -104,17 +93,19 @@ public class ContactHelper extends WebDriverHelperBase {
 		fillContactForm(contact, CREATION);
 		submitContactCreation();
 		manager.navigateTo().mainPage();
-		rebuildCacheFromDB();
+		 //update model
+	    manager.getModel().addContact(contact);
 
 	}
 
-	public ContactHelper modifyContact(String idFromDB, ContactData contact) {
+	public ContactHelper modifyContact(String idFromDB,int index, ContactData contact) {
 		manager.navigateTo().mainPage();
 		selectContact(idFromDB);
 		fillContactForm(contact, MODIFICATION);
 		submitContactModification();
 		manager.navigateTo().mainPage();
-		rebuildCacheFromDB();
+		 //update model
+	    manager.getModel().remove(index).addContact(contact);
 		return this;
 	}
 
@@ -128,11 +119,12 @@ public class ContactHelper extends WebDriverHelperBase {
 
 	}
 
-	public void deleteContact(String idFromDB) {
+	public void deleteContact(String idFromDB,int index) {
 		selectContact(idFromDB);
 		deleteContact();
 		manager.navigateTo().mainPage();
-		rebuildCacheFromDB();
+		 //update model
+	    manager.getModel().remove(index);
 		
 	}
 

@@ -5,20 +5,29 @@ public class GroupData implements Comparable<GroupData > {
 	private String header;
 	private String footer;
 	private String id;
-	public GroupData(String groupname, String header, String footer) {
+	public GroupData(String groupname, String header, String footer, String id) {
 		this.name = groupname;
 		this.header = header;
 		this.footer = footer;
-		//this.id=id;
+		this.id=id;
 	
 	}
 	public GroupData() {
 	}
 	
+
+	@Override
+	public int compareTo(GroupData other) {
+	return this.name.toLowerCase().compareTo(other.name.toLowerCase());
+	}
+	
 	@Override
 	public String toString() {
-		return "GroupData [name=" + name + ", header=" + header + ", footer=" + footer + "]";
+		return "GroupData [name=" + name + ", header=" + header + ", footer=" + footer + ", id=" + id + "]";
 	}
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -42,10 +51,6 @@ public class GroupData implements Comparable<GroupData > {
 			return false;
 		return true;
 	}
-	@Override
-	public int compareTo(GroupData other) {
-	return this.name.toLowerCase().compareTo(other.name.toLowerCase());
-	}
 	public GroupData withName(String name) {
 		this.name = name;
 		return this;
@@ -59,7 +64,7 @@ public class GroupData implements Comparable<GroupData > {
 		return this;
 	}
 	public GroupData withId(String id) {
-        id=id;
+        this.id=id;
 		return this;
 	}
 	

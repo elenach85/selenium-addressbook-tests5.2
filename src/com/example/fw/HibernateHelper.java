@@ -48,4 +48,14 @@ public class HibernateHelper extends HelperBase {
 		}
 		
 	}
+
+	public GroupData getGroup(String groupId) {
+		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Transaction trans = session.beginTransaction();
+		try {
+			return (GroupData) session.createQuery("from GroupData where group_id='"+groupId + "'").uniqueResult();	
+		} finally {
+			trans.commit();
+		}
+	}
 }

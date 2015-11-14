@@ -19,27 +19,43 @@ public class ContactRemovalTests extends TestBase{
 	public void deleteSomeContact()  {
 		//save old list
 		app.navigateTo().mainPage();
-		SortedListOf<ContactData>oldContactList=app.getContactHelper().getContactsFromDB();
-		SortedListOf<ContactData>oldContactListFromUI=app.getContactHelper().getContactsFromUI();
-		assertEquals(oldContactList.size(),oldContactListFromUI.size());
-	String numberOfResults=app.getDriver().findElement(By.xpath("//strong//span[@id='search_count']")).getText();
-		assertEquals(String.valueOf(oldContactList.size()),numberOfResults );
-		assertEquals(oldContactList,oldContactListFromUI);
+		SortedListOf<ContactData>oldContactList=app.getModel().getContacts();
+		assertEquals(String.valueOf(oldContactList.size()), app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+		//compare model with list from DB and UI
+		if (wantToCheckBeforeModification())
+		{
+			if ("yes".equals(app.getProperty("check.ui"))) {
+				SortedListOf<ContactData>oldContactListFromUI=app.getContactHelper().getContactsFromUI();
+				assertEquals(oldContactList,oldContactListFromUI);
+				assertEquals(String.valueOf(oldContactListFromUI.size()), app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+			}
+			if ("yes".equals(app.getProperty("check.db"))) {
+				SortedListOf<ContactData>oldContactListFromDB=(SortedListOf<ContactData>) app.getHibernateHelper().listContacts();
+				assertEquals(oldContactList,oldContactListFromDB);
+				assertEquals(String.valueOf(oldContactListFromDB.size()), app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+			}
+		}
 		 Random rnd=new Random();
 		 int index=rnd.nextInt(oldContactList.size()-1);
 		 String idFromDB=oldContactList.get(index).getId();
 		//actions
-		 app.getContactHelper().deleteContact(idFromDB);
+		 app.getContactHelper().deleteContact(idFromDB, index);
 		 app.navigateTo().mainPage();
 		 //save new list
-		 SortedListOf<ContactData>newContactList=app.getContactHelper().getContactsFromDB();
-		 SortedListOf<ContactData>newContactListFromUI=app.getContactHelper().getContactsFromUI();
+		 SortedListOf<ContactData>newContactList=app.getModel().getContacts();
 		  //compare
 			assertThat(newContactList, equalTo(oldContactList.without(index)));
-			String numberOfResultsAfterDel=app.getDriver().findElement(By.xpath("//strong//span[@id='search_count']")).getText();
-			assertEquals(newContactList,newContactListFromUI);
-			assertEquals(String.valueOf(newContactList.size()),numberOfResultsAfterDel);
-		
+			assertEquals(String.valueOf(newContactList.size()), app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+			if (wantToCheck()) {
+				if ("yes".equals(app.getProperty("check.db"))) {
+					assertThat(app.getModel().getContacts(),equalTo(app.getHibernateHelper().listContacts()));
+					assertEquals(String.valueOf(app.getHibernateHelper().listContacts().size()),app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+				}
+				if ("yes".equals(app.getProperty("check.ui"))) {
+				assertThat(app.getModel().getContacts(),equalTo(app.getContactHelper().getContactsFromUI()));
+				assertEquals(String.valueOf(app.getContactHelper().getContactsFromUI().size()),app.getDriver().findElement(By.xpath("//span[@id='search_count']")).getText());
+				  }	
+			}
 		
 	 }
 

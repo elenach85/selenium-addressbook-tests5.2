@@ -28,7 +28,12 @@ import static com.example.tests.ContactDataGenerator.loadContactsFromXmlFile;
 import com.thoughtworks.selenium.webdriven.commands.GetText;
 public class TestBase {
 	protected static ApplicationManager app;
-	
+	private int checkCounterBeforeModification;
+	private int checkCounterAfterModification;
+	private int checkCounter;
+	private int checkFrequency;
+	private int checkBeforeModFrequency;
+	private int checkAfterModFrequency;
 
 		@BeforeTest
 	public void setUp() throws Exception {
@@ -36,10 +41,41 @@ public class TestBase {
 			Properties properties = new Properties();
 			properties.load(new FileReader(new File(configFile)));
 			app=new ApplicationManager(properties);
-			
-	   
+			checkCounter=0;
+			checkCounterBeforeModification=0;
+			checkCounterAfterModification=0;
+			checkFrequency=Integer.parseInt(properties.getProperty("check.frequency","0")); 
+			checkBeforeModFrequency=Integer.parseUnsignedInt(properties.getProperty("checkBeforeMod.frequency","0"));
+			checkAfterModFrequency=Integer.parseUnsignedInt(properties.getProperty("checkAfterMod.frequency","0"));
 	  }
-
+		
+      protected boolean wantToCheck(){
+      checkCounter++;
+      if (checkCounter>checkFrequency) {
+    	 checkCounter=0;
+		return true;
+	} else {
+return false;
+	}
+      }
+      protected boolean wantToCheckBeforeModification(){
+          checkCounterBeforeModification++;
+          if (checkCounterBeforeModification>checkBeforeModFrequency) {
+        	 checkCounterBeforeModification=0;
+    		return true;
+    	} else {
+    return false;
+    	}
+          }
+      protected boolean wantToCheckAfterModification(){
+          checkCounterAfterModification++;
+          if (checkCounterAfterModification>checkAfterModFrequency) {
+        	 checkCounterAfterModification=0;
+    		return true;
+    	} else {
+    return false;
+    	}
+          }
 	@AfterTest
 	public void tearDown() throws Exception {
 		app.stop();
@@ -186,7 +222,7 @@ app.getGroupHelper().getGroupsFromUI();
 		return text;
 	}
 
-	public String getTextFromField(By locator) {
+	public  String getTextFromField(By locator) {
 		String text=app.getDriver().findElement(locator).getText();
 		return text;
 	}

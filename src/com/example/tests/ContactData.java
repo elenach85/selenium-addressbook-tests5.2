@@ -59,10 +59,10 @@ public class ContactData implements Comparable<ContactData> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
-		result = prime * result + ((home_tel == null) ? 0 : home_tel.hashCode());
-		result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
+		//result = prime * result + ((email == null) ? 0 : email.hashCode());
+		//result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
+		//result = prime * result + ((home_tel == null) ? 0 : home_tel.hashCode());
+		//result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
 		//result = prime * result + ((contact_id == null) ? 0 : contact_id.hashCode());
 		return result;
 	}
@@ -76,13 +76,11 @@ public class ContactData implements Comparable<ContactData> {
 		if (getClass() != obj.getClass())
 			return false;
 		ContactData other = (ContactData) obj;
-
 	/* if (contact_id != null && other.contact_id != null) {
 			 if (! contact_id.equals(other.contact_id)) {
 			  return false;
 			 }
-			}*/
-			
+			}*/	
 		if (email == null) {
 			if (other.email != null)
 				return false;
